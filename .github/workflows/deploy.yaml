@@ -1,0 +1,23 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: tinygo/tinygo:0.31.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy wasm_exec.js
+        run: cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./public/wasm_exec.js
+      - name: Build wasm
+        run: tinygo build -o mylib.wasm -target wasm ./public/main.go
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
