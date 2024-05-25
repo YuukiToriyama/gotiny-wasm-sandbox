@@ -10,12 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: $GOPATH/src/github.com/YuukiToriyama/gotiny-wasm-sandbox
       - name: Copy wasm_exec.js
-        run: docker run -u root -v $GOPATH:/go -e "GOPATH=/go" tinygo/tinygo:0.31.2 /bin/bash -c "cp /usr/local/tinygo/targets/wasm_exec.js /go/src/github.com/YuukiToriyama/gotiny-wasm-sandbox/public"
+        run: docker run -u root -v `pwd`:/repo tinygo/tinygo:0.31.2 /bin/bash -c "cp /usr/local/tinygo/targets/wasm_exec.js /repo/public"
       - name: Build wasm
-        run: docker run -u root -v $GOPATH:/go -e "GOPATH=/go" tinygo/tinygo:0.31.2 tinygo build -o /go/src/github.com/YuukiToriyama/gotiny-wasm-sandbox/public/mylib.wasm -target wasm --no-debug /go/src/github.com/YuukiToriyama/gotiny-wasm-sandbox/main.go
+        run: docker run -u root -v `pwd`:/repo tinygo/tinygo:0.31.2 tinygo build -o /repo/public/mylib.wasm -target wasm --no-debug /repo/main.go
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
