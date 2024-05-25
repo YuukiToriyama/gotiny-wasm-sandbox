@@ -1,10 +1,11 @@
 package parser
 
-import "strings"
+import (
+	"github.com/YuukiToriyama/gotiny-wasm-sandbox/types"
+	"strings"
+)
 
-type Row = map[string]string
-
-func parse(csv string) (result []Row) {
+func parse(csv string) (result []types.Row) {
 	line := strings.Split(csv, "\n")
 	if len(line) <= 1 {
 		print(result)
@@ -19,7 +20,7 @@ func parse(csv string) (result []Row) {
 		if len(row) != colsCount {
 			// TODO: ヘッダー行の要素の個数と今見ている行の要素の個数が合わない場合エラーを投げる
 		}
-		parsed := make(Row, colsCount)
+		parsed := make(types.Row, colsCount)
 		for j, elem := range row {
 			parsed[header[j]] = elem
 		}
