@@ -1,3 +1,3 @@
-module github.com/YuukiToriyama/gotiny-wasm-sandbox
+module github.com/YuukiToriyama/tinygo-wasm-sandbox
 
 go 1.19

@@ -1,1 +1,1 @@
-# gotiny-wasm-sandbox
+# tinygo-wasm-sandbox
