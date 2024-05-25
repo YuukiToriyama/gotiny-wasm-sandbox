@@ -13,7 +13,7 @@ func Test_parse(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		wantResult []types.Row
+		wantResult types.Rows
 	}{
 		{
 			name:       "3列1行",
@@ -23,7 +23,7 @@ func Test_parse(t *testing.T) {
 		{
 			name: "3列2行",
 			args: args{"id,name,mail_address\n1,toriyama,toriyama@example.com\n2,hogehoge,hogehoge@example.com"},
-			wantResult: []types.Row{
+			wantResult: types.Rows{
 				{"id": "1", "name": "toriyama", "mail_address": "toriyama@example.com"},
 				{"id": "2", "name": "hogehoge", "mail_address": "hogehoge@example.com"},
 			},
