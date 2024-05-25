@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_parse(t *testing.T) {
+func Test_Parse(t *testing.T) {
 	type args struct {
 		csv string
 	}
@@ -31,7 +31,7 @@ func Test_parse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResult := parse(tt.args.csv); !reflect.DeepEqual(gotResult, tt.wantResult) {
+			if gotResult := Parse(tt.args.csv); !reflect.DeepEqual(gotResult, tt.wantResult) {
 				t.Errorf("parse() = %v, want %v", gotResult, tt.wantResult)
 			}
 		})

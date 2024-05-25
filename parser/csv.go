@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func parse(csv string) (result types.Rows) {
+func Parse(csv string) (result types.Rows) {
 	line := strings.Split(csv, "\n")
 	if len(line) <= 1 {
 		print(result)
