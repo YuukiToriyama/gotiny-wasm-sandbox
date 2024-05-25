@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>gotiny-wasm-sandbox</title>
+    <script src="./wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        var wasm;
+
+        go.importObject.env = {
+            'console_log': (x) => console.log(x),
+            'alert': (x) => alert(x)
+        };
+
+        WebAssembly.instantiateStreaming(fetch("./mylib.wasm"), go.importObject).then(function (obj) {
+            wasm = obj.instance;
+            go.run(wasm);
+        });
+    </script>
+</head>
+<body>
+<button id="click_me_1">Click1</button>
+<script>
+    document.getElementById("click_me_1").addEventListener("click", () => {
+        const result = wasm.exports.multiply(2, 3);
+        console.log(result);
+    });
+</script>
+</body>
+</html>
