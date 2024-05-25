@@ -8,24 +8,76 @@
         const go = new Go();
         var wasm;
 
-        go.importObject.env = {
-            'console_log': (x) => console.log(x),
-            'alert': (x) => alert(x)
-        };
-
         WebAssembly.instantiateStreaming(fetch("./mylib.wasm"), go.importObject).then(function (obj) {
             wasm = obj.instance;
             go.run(wasm);
         });
     </script>
+    <style>
+        table {
+            width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<button id="click_me_1">Click1</button>
+<table>
+    <thead>
+    <tr>
+        <td>CSV</td>
+        <td>→</td>
+        <td>JSON</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><textarea id="input_csv">id,name,prefecture
+1,Taro,Kanagwa
+2,Hanako,Tokyo
+3,Kevin,Calfornia</textarea></td>
+        <td>
+            <button id="button_convert">Convert</button>
+        </td>
+        <td><textarea id="output_csv"></textarea></td>
+    </tr>
+    </tbody>
+</table>
 <script>
-    document.getElementById("click_me_1").addEventListener("click", () => {
-        const result = wasm.exports.multiply(2, 3);
-        console.log(result);
+    const csv = "id,name,mail_address\n1,toriyama,toriyama@example.com\n2,hogehoge,hogehoge@example.com";
+    document.getElementById("button_convert").addEventListener("click", () => {
+        const input = document.getElementById("input_csv").value;
+
+        const ptr = wasm.exports.csv2json(writeBuffer(input, wasm), input.length);
+        const bufSize = wasm.exports.getBufSize();
+        const result = readBuffer(ptr, bufSize, wasm);
+
+        document.getElementById("output_csv").value = result;
     });
+
+    const writeBuffer = (text, wasmModule) => {
+        const addr = wasmModule.exports.getWasmBuffer();
+        const buffer = wasmModule.exports.memory.buffer;
+        const mem = new Int8Array(buffer);
+        const view = mem.subarray(addr, addr + text.length);
+        for (let i = 0; i < text.length; i++) {
+            view[i] = text.charCodeAt(i);
+        }
+        return addr
+    }
+
+    const readBuffer = (addr, size, wasmModule) => {
+        let memory = wasmModule.exports.memory;
+        let bytes = memory.buffer.slice(addr, addr + size);
+        return String.fromCharCode.apply(null, new Int8Array(bytes));
+    }
 </script>
 </body>
 </html>
